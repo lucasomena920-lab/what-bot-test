@@ -1,174 +1,219 @@
-WhatsApp Bot
+ WhatsApp Bot
 
-Sistema de atendimento automatizado para WhatsApp com painel de gerenciamento, configuração de respostas e suporte a atendimento humano.
+Atendimento automatizado com painel web e encaminhamento para atendimento humano.
 
-O projeto foi desenvolvido para centralizar a conexão do WhatsApp e permitir que o atendimento automático seja administrado de forma simples por meio de uma interface web.
+Sistema desenvolvido para centralizar a conexão com o WhatsApp e administrar respostas automáticas em uma interface web. Cada conta pode configurar suas mensagens e acompanhar os contatos que precisam de atendimento humano.
 
-Como o sistema funciona
+Status: em desenvolvimento · Tecnologias: TypeScript e Node.js
 
-O funcionamento é dividido em três partes principais:
+⚠️ Atenção — alterações necessárias
 
-1. Acesso ao painel
+[!WARNING]
+A integração atual utiliza Baileys, com conexão por QR Code. A substituição pela API oficial do WhatsApp Business (Cloud API) é uma pendência do projeto e ainda não foi implementada.
 
-O usuário entra no sistema por meio de uma conta própria.
+Essa migração deve ser tratada como uma etapa necessária antes da disponibilização comercial do sistema. O funcionamento descrito neste README corresponde à versão atual.
 
-Após o login, o painel permite acompanhar o estado do WhatsApp, configurar o atendimento automático e visualizar contatos que estão aguardando atendimento humano.
+Pendências da migração
 
-2. Conexão com o WhatsApp
+Substituir a integração com Baileys pela API oficial.
 
-A conta do WhatsApp é vinculada ao sistema por QR Code.
+Adaptar a conexão e a autenticação ao novo modelo de integração.
 
-Depois da conexão, o sistema mantém a sessão ativa para evitar a necessidade de escanear um novo QR Code a cada reinicialização normal da aplicação.
+Ajustar o recebimento e o envio de mensagens.
 
-O painel informa o estado atual da conexão e permite desconectar a conta quando necessário.
+Atualizar os estados de conexão e as orientações do painel.
 
-3. Atendimento automático
+Validar os fluxos automáticos e a transição para atendimento humano.
 
-Quando uma mensagem é recebida, o sistema verifica a configuração definida para aquela conta e responde de acordo com o fluxo configurado.
+Revisar a configuração do ambiente e atualizar a documentação.
 
-O atendimento pode incluir:
+Funcionalidades
 
-mensagem inicial;
+Recurso
 
-menu de opções;
+O que faz
 
-informações de horário;
+Acesso por conta
 
-apresentação de serviços;
+Permite entrar no painel com uma conta própria.
 
-respostas para opções não reconhecidas;
+Conexão com o WhatsApp
 
-encaminhamento para atendimento humano.
+Vincula a conta por QR Code na integração atual.
 
-As mensagens exibidas ao cliente podem ser alteradas diretamente pelo painel.
+Estado da conexão
+
+Exibe a situação do WhatsApp e permite desconectar a conta.
+
+Respostas automáticas
+
+Processa as mensagens conforme o fluxo configurado.
+
+Configuração pelo painel
+
+Permite editar as mensagens sem alterar o código.
 
 Atendimento humano
 
-Quando um cliente solicita falar com uma pessoa, o atendimento automático é suspenso somente para aquele contato.
+Suspende o bot para um contato enquanto ele recebe atendimento.
 
-O contato passa a aparecer na área de atendimentos do painel.
+Retomada do bot
 
-Enquanto o atendimento humano estiver ativo, o bot não interfere na conversa.
+Permite reativar as respostas automáticas após o atendimento humano.
 
-Depois que o atendimento for concluído, o operador pode reativar o atendimento automático para aquele contato.
+Como funciona
 
-Fluxo geral
+1. Acesso ao painel
 
-Cliente envia uma mensagem
-        |
-        v
-Sistema recebe a mensagem
-        |
-        v
-Verifica o estado do contato
-        |
-        +---- Atendimento humano ativo
-        |          |
-        |          v
-        |     Bot não responde
-        |
-        v
-Processa a opção enviada
-        |
-        +---- Opção reconhecida
-        |          |
-        |          v
-        |     Envia a resposta configurada
-        |
-        +---- Solicitação de atendente
-        |          |
-        |          v
-        |     Ativa atendimento humano
-        |
-        +---- Opção não reconhecida
-                   |
-                   v
-             Envia mensagem padrão
+Após o login, o usuário pode acompanhar a conexão do WhatsApp, configurar as respostas e visualizar os contatos que aguardam atendimento humano.
 
-Painel
+2. Conexão com o WhatsApp
 
-O painel atualmente possui áreas para:
+Na versão atual, a conexão é feita por QR Code. O sistema mantém os dados da sessão para reutilizá-la em reinicializações normais da aplicação, enquanto a sessão permanecer válida.
 
-visão geral;
+O painel informa o estado da conexão e permite desconectar a conta quando necessário.
 
-conexão do WhatsApp;
+3. Atendimento automático
 
-atendimentos;
+Ao receber uma mensagem, o sistema verifica o estado do contato e as configurações da conta. Se o atendimento automático estiver ativo, processa a opção enviada e responde de acordo com o fluxo definido.
 
-configuração do bot.
+O fluxo pode incluir saudação, menu de opções, horário de atendimento, apresentação de serviços, resposta padrão e encaminhamento para uma pessoa.
 
-A interface foi criada para permitir que as principais funções sejam administradas sem necessidade de editar o código.
+Atendimento humano
 
-Configuração do atendimento
+Quando o cliente solicita um atendente, o bot suspende as respostas automáticas somente para aquele contato, que passa a aparecer na área de atendimentos do painel.
 
-Cada conta pode definir suas próprias mensagens.
+Enquanto o atendimento humano estiver ativo, o bot não responde à conversa. Ao concluir o atendimento, o operador pode reativar a automação para esse contato.
 
-Entre as configurações disponíveis estão:
+Regras do fluxo
 
-identificação da empresa;
+Situação ao receber uma mensagem
 
-saudação;
+Comportamento do sistema
 
-menu;
+Atendimento humano já está ativo
 
-horário de atendimento;
+Mantém o bot suspenso para o contato.
 
-serviços;
+Cliente solicita um atendente, com o bot ativo
 
-mensagem de atendimento humano;
+Ativa o atendimento humano e suspende a automação para o contato.
 
-resposta padrão.
+Cliente envia uma opção reconhecida, com o bot ativo
 
-Dessa forma, o mesmo sistema pode ser adaptado para diferentes tipos de negócio.
+Envia a resposta configurada.
 
-Privacidade
+Cliente envia uma opção não reconhecida, com o bot ativo
 
-O projeto foi pensado para trabalhar apenas com as informações necessárias para o funcionamento do atendimento.
+Envia a mensagem padrão.
 
-O sistema não foi desenvolvido para manter uma cópia completa do histórico de conversas do WhatsApp.
+Painel de gerenciamento
 
-Dados internos de autenticação, conexão e configuração não fazem parte deste repositório público.
+O painel reúne as principais operações em quatro áreas:
+
+Visão geral: acompanhamento do sistema.
+
+Conexão do WhatsApp: vinculação da conta e consulta do estado da conexão.
+
+Atendimentos: acompanhamento dos contatos em atendimento humano.
+
+Configuração do bot: personalização das mensagens e do fluxo automático.
+
+Personalização do atendimento
+
+Cada conta pode configurar as mensagens conforme as necessidades do negócio:
+
+Configuração
+
+Finalidade
+
+Identificação da empresa
+
+Apresentar o negócio ao cliente.
+
+Saudação
+
+Definir a mensagem inicial.
+
+Menu
+
+Apresentar as opções de atendimento.
+
+Horário de atendimento
+
+Informar os horários do negócio.
+
+Serviços
+
+Apresentar os serviços disponíveis.
+
+Mensagem de atendimento humano
+
+Orientar o cliente ao solicitar um atendente.
+
+Resposta padrão
+
+Responder às opções não reconhecidas.
 
 Tecnologias
 
-O projeto é desenvolvido principalmente com:
+TypeScript: desenvolvimento da aplicação.
 
-TypeScript;
+Node.js: execução do servidor.
 
-Node.js;
+Tecnologias web: interface do painel de gerenciamento.
 
-tecnologias web para o painel.
+Baileys: integração atual com o WhatsApp, com substituição planejada pela API oficial.
 
-Detalhes internos de infraestrutura, autenticação, persistência e gerenciamento de sessões foram intencionalmente omitidos desta documentação pública.
+Desenvolvimento local
 
-Desenvolvimento
+Pré-requisitos
 
-Instale as dependências:
+Node.js e npm instalados.
+
+Configurações locais e serviços exigidos pela aplicação preparados.
+
+[!NOTE]
+Os comandos abaixo cobrem instalação, desenvolvimento e compilação. A aplicação também depende da configuração local do ambiente; este README não detalha todas as variáveis e etapas de infraestrutura.
+
+Instalar dependências
 
 npm install
 
-Execute em modo de desenvolvimento:
+Executar em desenvolvimento
 
 npm run dev
 
-Compile o projeto:
+Compilar o projeto
 
 npm run build
 
-As configurações necessárias para execução devem ser definidas localmente no ambiente de desenvolvimento.
+Privacidade e dados locais
 
-Arquivos contendo credenciais, configurações privadas ou dados de execução não devem ser enviados ao repositório.
+O projeto foi pensado para utilizar as informações necessárias ao atendimento. Não foi desenvolvido para manter uma cópia completa do histórico de conversas do WhatsApp.
+
+Credenciais, tokens, arquivos de sessão, configurações privadas e dados de execução devem permanecer fora do repositório. As configurações necessárias devem ser definidas no ambiente local.
+
+Esta documentação apresenta o funcionamento geral do sistema, sem incluir valores de credenciais ou configurações privadas.
 
 Status do projeto
 
-O projeto está em desenvolvimento.
+As funcionalidades descritas para a versão atual incluem:
 
-As principais funções de conexão, configuração do bot, atendimento automático e atendimento humano já fazem parte da aplicação.
+Conexão com o WhatsApp por QR Code usando Baileys.
 
-Novas funções e melhorias serão adicionadas conforme a evolução do sistema.
+Configuração das mensagens pelo painel.
+
+Atendimento automático conforme o fluxo definido.
+
+Encaminhamento para atendimento humano por contato.
+
+Reativação do bot após o atendimento humano.
+
+Migração para a API oficial do WhatsApp Business.
+
+O sistema segue em desenvolvimento. Novas funcionalidades e melhorias serão adicionadas conforme a evolução do projeto.
 
 Uso
 
-Este projeto deve ser utilizado de acordo com as políticas e condições aplicáveis aos serviços integrados.
-
-As informações desta documentação descrevem apenas o funcionamento geral da aplicação. Detalhes internos considerados sensíveis não são publicados no repositório.
+O uso do sistema deve respeitar as políticas e condições dos serviços integrados. A existência das funcionalidades descritas não representa uma declaração de que o projeto está pronto para produção.
