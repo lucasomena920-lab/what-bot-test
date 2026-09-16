@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   Int               @id @default(autoincrement())
+  name                 String
+  email                String            @unique
+  password             String
+  plan                 String            @default("none")
+  subscriptionStatus   String            @default("pending")
+  subscriptionStartsAt DateTime?
+  subscriptionEndsAt   DateTime?
+  stripeCustomerId     String?           @unique
+  stripeSubscriptionId String?           @unique
+  active               Boolean           @default(true)
+  createdAt            DateTime          @default(now())
+  whatsappSession      WhatsAppSession?
+  botConfig            BotConfig?
+  botContacts          BotContactState[]
+}
+
+model WhatsAppSession {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @unique
+  status      String
+  phoneNumber String?
+  lastError   String?
+  connectedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model BotConfig {
+  id            Int      @id @default(autoincrement())
+  userId        Int      @unique
+  companyName   String
+  greeting      String
+  menu          String
+  businessHours String
+  services      String
+  humanSupport  String
+  fallback      String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model BotContactState {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  contactId String
+  humanMode Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contactId])
+}
+
+model StripeWebhookEvent {
+  id          String   @id
+  type        String
+  status      String   @default("processing")
+  lastError   String?
+  processedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
